@@ -1,20 +1,27 @@
 <!-- Elegantly unscramble this input using the space provided. Then write the scrambler that made it. The answer is an object with global scope that can scramble and unscramble any text any number of times. -->
 
 <template>
-<div>
+<el-row :gutter="20" class="App"><el-col :span="8" :offset="8">
+
+  <h1>enfuzz</h1>
 
 <!-- INPUT -->
   <el-form ref="form" :model="form" label-width="120px" label-position="top">
 
     <el-form-item label="input">
-      <el-input autosize
+      <el-input
         type="textarea"
         :placeholder="placeholder"
         v-model="form.input"
       />
     </el-form-item>
 
-    <el-form-item label="encoding">
+
+    <el-form-item :label="directionLabel">
+      <el-switch v-model="form.direction" />
+    </el-form-item>
+
+    <el-form-item v-show="form.direction" label="encoding">
       <el-select v-model="form.encodingSelected" placeholder="please select an encoding">
         <el-option
           v-for="(encoding, label) in typefaces"
@@ -25,10 +32,6 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item :label="directionLabel">
-      <el-switch v-model="form.direction" />
-    </el-form-item>
-
     <el-form-item>
       <el-button type="primary" @click="translate">{{ directionLabel }}</el-button>
     </el-form-item>
@@ -37,7 +40,7 @@
 
 <!-- OUTPUT -->
 
-  <el-form label-position="top">
+  <el-form label-position="top" v-show="form.direction" >
     <el-form-item :label="whichOutputLabel">
       <el-switch v-model="whichOutput" />
     </el-form-item>
@@ -48,23 +51,24 @@
     v-html="output"
     :class="form.encodingSelected"
   />
-  <p v-else>{{ output }}</p>
+  <p v-else class="pleb">{{ output }}</p>
 
-</div>
+</el-col></el-row>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      // Settings
+
+      // Settings:
       maxRandom: 50,
       typefaces: {
         pleb: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*(){}:',
         nyan: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
       },
 
-      // Form data
+      // Form data:
       placeholder: 'Elegantly unscramble this input using the space provided. Then write the scrambler that made it. The answer is an object with global scope that can scramble and unscramble any text any number of times.',
       form: {
         input: '',
@@ -108,8 +112,6 @@ export default {
       return outputStr
     },
 
-
-
     hide(char) {
       return `<span hidden>${ char }</span>`
     },
@@ -122,18 +124,19 @@ export default {
       const tags = []
       const output = []
 
-      // encode
+    // ENCODE:
       if(this.form.direction) {
-        // separate all strings
-        // add hidden tags
+        // split all chars and wrap in hidden span tags
         const message = this.form.input.split('').map(this.hide)
 
         message.forEach(char => {
           tags.push(char)
-          // for each letter add a random number of random characters after surrounded by span tags
+
+          // for each letter append a random number of random characters surrounded by span tags
           this.generateRandomString().forEach(char => tags.push(this.span(char)))
         })
 
+        // line break every 100 visible chars
         let hundred = 1
         for (let i = 0; i < tags.length; ++i) {
           output.push(tags[i])
@@ -148,11 +151,19 @@ export default {
         }
 
         this.output = output.join('')
-      } else {
-        // remove all non-hidden span inputs
-        // remove all brs
-        // remove all tags
-        // join all strings
+      }
+
+    // DECODE:
+      else {
+        let output = this.form.input
+
+        // remove all visible span inputs
+        this.output = output.replace(/<span>.<\/span>/g, '')
+        // remove all <br>s
+              .replace(/<br>/g, '')
+        // remove all remaining tags
+              .replace(/<span hidden>/g, '')
+              .replace(/<\/span>/g, '')
       }
     },
   }
@@ -165,8 +176,9 @@ export default {
   src: url('./assets/nyan.ttf');
 }
 
-body {
+.App {
   font-family: Helvetica, Arial, sans-serif;
+  overflow-wrap: break-word;
 }
 
 .pleb {
