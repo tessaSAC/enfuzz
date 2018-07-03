@@ -20,7 +20,7 @@
           v-for="(encoding, label) in typefaces"
           :key="label"
           :label="label"
-          :value="encoding"
+          :value="label"
         />
       </el-select>
     </el-form-item>
@@ -43,7 +43,11 @@
     </el-form-item>
   </el-form>
 
-  <p v-if="whichOutput" v-html="output"/>
+  <p
+    v-if="whichOutput"
+    v-html="output"
+    :class="form.encodingSelected"
+  />
   <p v-else>{{ output }}</p>
 
 </div>
@@ -115,7 +119,9 @@ export default {
     },
 
     translate() {
-      const output = []
+      const tags = []
+      const tagsChunked = []
+
       // encode
       if(this.form.direction) {
         // separate all strings
@@ -123,17 +129,17 @@ export default {
         const message = this.form.input.split('').map(this.hide)
 
         message.forEach(char => {
-          output.push(char)
+          tags.push(char)
           // for each letter add a random number of random characters after surrounded by span tags
-          this.generateRandomString().forEach(char => output.push(this.span(char)))
+          this.generateRandomString().forEach(char => tags.push(this.span(char)))
         })
 
         // add an invalid <br />
-        for(let i = 0; i < output.length; ++i) {
-          if (i && !(i % 100)) output.splice(i + 1, 0, `<br>`)
+        while(tags.length) {
+            tagsChunked.push(tags.splice(0, 100))
         }
-
-        this.output = output.join('')
+        console.log(tagsChunked.map(chunk => chunk.join('')))
+        this.output = tagsChunked.map(chunk => chunk.join('')).join(`<br>`)
       } else {
         // remove all non-hidden span inputs
         // remove all brs
@@ -144,3 +150,23 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@font-face {
+  font-family: nyan;
+  src: url('./assets/nyan.ttf');
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.pleb {
+  font-family: monospace
+}
+
+.nyan {
+  font-family: nyan;
+}
+</style>
+
