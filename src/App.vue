@@ -129,8 +129,8 @@ export default {
         })
 
         // add an invalid <br />
-        for(let i = 0; i < output.length; ++ i) {
-          if (!i % 100) output.splice(i + 1, 0, `<br>`)
+        for(let i = 0; i < output.length; ++i) {
+          if (i && !(i % 100)) output.splice(i + 1, 0, `<br>`)
         }
 
         this.output = output.join('')
