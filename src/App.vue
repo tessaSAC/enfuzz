@@ -57,6 +57,12 @@
   />
   <p v-else class="pleb">{{ output }}</p>
 
+
+  <audio autoplay loop>
+    <source src="./assets/meowmix.ogg" type="audio/ogg">
+    Your browser does not support the <code>audio</code> element.
+  </audio>
+
 </el-col></el-row>
 </template>
 
@@ -83,6 +89,7 @@ export default {
       // Result:
       output: '',
       whichOutput: false,
+
     }
   },
 
@@ -99,6 +106,12 @@ export default {
       return this.whichOutput ? 'html' : 'plaintext'
     },
   },
+
+  // created() {
+  //   const meowmix = new Audio('./assets/meowmix.ogg')
+  //   meowmix.loop = true
+  //   meowmix.play()
+  // },
 
   methods: {
     clearOutput() {
