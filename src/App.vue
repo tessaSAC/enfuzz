@@ -13,8 +13,10 @@
         type="textarea"
         :placeholder="placeholder"
         v-model="form.input"
+        @keyup.ctrl.enter.native="translate"
       />
     </el-form-item>
+    <p class="tip">ctrl-click to speed-{{ directionLabel }}</p>
 
 
     <el-form-item :label="directionLabel">
@@ -88,7 +90,7 @@ export default {
 
       // Result:
       output: '',
-      whichOutput: false,
+      whichOutput: true,
 
     }
   },
@@ -200,6 +202,17 @@ export default {
 .App {
   font-family: Helvetica, Arial, sans-serif;
   overflow-wrap: break-word;
+}
+
+.App >>> .el-textarea__inner {
+  height: 5em;
+}
+
+.tip {
+  position: relative;
+  top: -1.5em;
+  color: lightpink;
+  font-size: 0.5em;
 }
 
 .pleb {
