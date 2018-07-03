@@ -109,12 +109,6 @@ export default {
     },
   },
 
-  // created() {
-  //   const meowmix = new Audio('./assets/meowmix.ogg')
-  //   meowmix.loop = true
-  //   meowmix.play()
-  // },
-
   methods: {
     clearOutput() {
       this.output = ''
