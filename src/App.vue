@@ -18,11 +18,15 @@
 
 
     <el-form-item :label="directionLabel">
-      <el-switch v-model="form.direction" />
+      <el-switch v-model="form.direction" @change="clearOutput" />
     </el-form-item>
 
     <el-form-item v-show="form.direction" label="encoding">
-      <el-select v-model="form.encodingSelected" placeholder="please select an encoding">
+      <el-select
+        v-model="form.encodingSelected"
+        placeholder="please select an encoding"
+        @change="translate"
+      >
         <el-option
           v-for="(encoding, label) in typefaces"
           :key="label"
@@ -93,10 +97,14 @@ export default {
 
     whichOutputLabel() {
       return this.whichOutput ? 'html' : 'plaintext'
-    }
+    },
   },
 
   methods: {
+    clearOutput() {
+      this.output = ''
+    },
+
     generateRandomNumber(max) {
       return Math.ceil(Math.random() * max)
     },
