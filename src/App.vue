@@ -1,28 +1,88 @@
+// Elegantly unscramble this input using the space provided. Then write the scrambler that made it. The answer is an object with global scope that can scramble and unscramble any text any number of times.
+
+// remove all non-hidden span inputs
+// remove all brs
+// remove all tags
+// join all strings
+
+// separate all strings
+// add hidden tags
+// for each letter add a random number of random characters after surrounded by span tags
+// add an invalid <br /> tag for each 100 chars
+
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <el-form ref="form" :model="form" label-width="120px">
+
+      <el-form-item label="input">
+        <el-input autosize
+          type="textarea"
+          :placeholder="placeholder"
+          v-model="form.input"
+        />
+      </el-form-item>
+
+      <el-form-item label="encoding">
+        <el-select v-model="form.encodingSelected" placeholder="please select an encoding">
+          <el-option
+            v-for="(encoding, label) in typefaces"
+            :key="label"
+            :label="label"
+            :value="encoding"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item :label="direction">
+        <el-switch v-model="form.toggle"></el-switch>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="update">{{ direction }}</el-button>
+      </el-form-item>
+
+    </el-form>
+
+    <p>{{ output }}</p>
+
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      placeholder: 'Elegantly unscramble this input using the space provided. Then write the scrambler that made it. The answer is an object with global scope that can scramble and unscramble any text any number of times.',
+
+      typefaces: {
+        pleb: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*(){}:',
+        nyan: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+      },
+
+      form: {
+        input: '',
+        encodingSelected: 'nyan',
+        toggle: true
+      },
+
+      output: ''
+    }
+  },
+
+  computed: {
+    direction() {
+      return this.form.toggle ? 'encode' : 'decode'
+    }
+  },
+
+  methods: {
+    update() {
+      // encode
+      if(this.form.toggle) {
+
+      } else {
+      }
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
