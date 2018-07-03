@@ -120,7 +120,7 @@ export default {
 
     translate() {
       const tags = []
-      const tagsChunked = []
+      const output = []
 
       // encode
       if(this.form.direction) {
@@ -134,12 +134,20 @@ export default {
           this.generateRandomString().forEach(char => tags.push(this.span(char)))
         })
 
-        // add an invalid <br />
-        while(tags.length) {
-            tagsChunked.push(tags.splice(0, 100))
+        let hundred = 1
+        for (let i = 0; i < tags.length; ++i) {
+          output.push(tags[i])
+
+          if (!tags[i].includes('hidden')) {
+            if (hundred === 100) {
+              output.push(`<br>`)
+              hundred = 1
+            }
+            else ++hundred
+          }
         }
-        console.log(tagsChunked.map(chunk => chunk.join('')))
-        this.output = tagsChunked.map(chunk => chunk.join('')).join(`<br>`)
+
+        this.output = output.join('')
       } else {
         // remove all non-hidden span inputs
         // remove all brs
